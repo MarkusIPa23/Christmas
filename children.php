@@ -1,15 +1,23 @@
 <?php
-require("config.php");
 $config = require("config.php");
-$sql = "SELECT * FROM children"; 
-$result = $conn->query($sql);
 
-if ($result->num_rows > 0) {
+require("database.php");
 
-    while($row = $result->fetch_assoc()) {
-        echo $row["firstname"] . $row["middlename"] . $row["surname"] . ":Vecums" . $row["age"] . "<br>";
+$db = new Database($config['database']);
+
+$children = $db->query("SELECT * FROM children");
+$letters = $db->query("SELECT * FROM letters");
+if ($children) {
+    echo "<ul>";
+    foreach ($children as $child) {
+        echo "<li>" . $child["firstname"] . " " . $child["middlename"] . " " . $child["surname"] . ": Vecums " . $child["age"] . "</li>";
+        foreach ($letters as $letter){
+            echo "<li>" . $letter["sender_id"] . " " . $letter["letter_text"] . "</li>";
+        }
     }
+    echo "</ul>";
+} else {
+    echo "Nav atrasti bērni.";
 }
-
-$conn->close();
 ?>
+

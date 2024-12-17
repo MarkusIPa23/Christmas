@@ -1,14 +1,16 @@
 <?php
-require("config.php");
 $config = require("config.php");
-$sql = "SELECT * FROM gifts"; 
-$result = $conn->query($sql);
 
-if ($result->num_rows > 0) {
+require("database.php");
 
-    while($row = $result->fetch_assoc()) {
-        echo $row["name"] . $row["count_available"] . "<br>";
+$db = new Database($config["database"]);
+$gifts = $db->query("SELECT * FROM gifts");
+
+if ($gifts) {
+    foreach ($gifts as $gift) {
+        echo $gift["name"] . " - Pieejamais daudzums: " . $gift["count_available"] . "<br>";
     }
+} else {
+    echo "Nav atrasti dati par dāvanām.";
 }
-$conn->close();
 ?>
